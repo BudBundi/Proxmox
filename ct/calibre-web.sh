@@ -52,20 +52,19 @@ function default_settings() {
 
 function update_script() {
 header_info
-if [[ ! -f /etc/systemd/system/esphomeDashboard.service ]]; then msg_error "No ${APP} Installation Found!"; exit; fi
+if [[ ! -f /etc/systemd/system/cps.service ]]; then msg_error "No ${APP} Installation Found!"; exit; fi
 msg_info "Stopping Calibre-Web"
-systemctl stop esphomeDashboard
+systemctl stop cps
 msg_ok "Stopped Calibre-Web"
 
 msg_info "Updating Calibre-Web"
-if [[ -d /srv/esphome ]]; then
-  source /srv/esphome/bin/activate &>/dev/null
+if [[ -d /opt/calibre-web/venv/ ]]; then
+  source /opt/calibre-web/venv/bin/activate &>/dev/null
 fi
-pip3 install -U esphome &>/dev/null
+pip3 install -U calibreweb &>/dev/null
 msg_ok "Updated Calibre-Web"
-
 msg_info "Starting Calibre-Web"
-systemctl start esphomeDashboard
+systemctl start cps
 msg_ok "Started Calibre-Web"
 msg_ok "Updated Successfully"
 exit
