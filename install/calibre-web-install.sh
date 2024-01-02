@@ -13,12 +13,12 @@ setting_up_container
 network_check
 update_os
 
-#msg_info "Installing Dependencies"
-#$STD apt-get install -y curl
-#$STD apt-get install -y sudo
-#$STD apt-get install -y mc
-#$STD apt-get install -y git
-#msg_ok "Installed Dependencies"
+msg_info "Installing Dependencies"
+$STD apt-get install -y curl
+$STD apt-get install -y sudo
+$STD apt-get install -y mc
+$STD apt-get install -y git
+msg_ok "Installed Dependencies"
 
 msg_info "Updating Python3"
 $STD apt-get install -y \
@@ -31,25 +31,25 @@ msg_ok "Updated Python3"
 msg_info "Installing Calibre-Web"
 mkdir /opt/calibre-web
 cd /opt/calibre-web
-$STD pip install calibreweb
+$STD python3 -m venv venv
+$STD ./venv/bin/python3 -m pip install calibreweb
 msg_ok "Installed Calibre-Web"
 
-#msg_info "Creating Service"
-#cat <<EOF >/etc/systemd/system/esphomeDashboard.service
-#[Unit]
-#Description=ESPHome Dashboard
-#After=network.target
+msg_info "Creating Service"
+cat <<EOF >/etc/systemd/system/cps.service
+[Unit]
+Description=Calibre-Web
 
-#[Service]
-#ExecStart=/usr/local/bin/esphome dashboard /root/config/
-#Restart=always
-#User=root
+[Service]
+ExecStart=/opt/calibre-web/venv/bin/cps
+Restart=always
+User=root
 
-#[Install]
-#WantedBy=multi-user.target
-#EOF
-#systemctl enable -q --now esphomeDashboard.service
-#msg_ok "Created Service"
+[Install]
+WantedBy=multi-user.target
+EOF
+systemctl enable -q --now cps.service
+msg_ok "Created Service"
 
 motd_ssh
 customize
